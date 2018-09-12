@@ -25,7 +25,6 @@ provider:
 # you can overwrite defaults here
   stage: dev
   region: ap-northeast-1
-  profile: esm-development
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -56,6 +55,8 @@ package:
 functions:
   main:
     handler: bin/main
+    environment:
+      IDOBATA_HOOK_ENDPOINT_URL: ${env:IDOBATA_HOOK_ENDPOINT_URL}
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

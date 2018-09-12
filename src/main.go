@@ -1,38 +1,42 @@
 package main
 
 import (
-    "bytes"
-    "context"
-    "encoding/json"
+    "fmt"
+    "os"
 
-    "github.com/aws/aws-lambda-go/events"
+    "github.com/mattsan/emattsan-go/amesh"
+    "github.com/mattsan/emattsan-go/idobata"
+
     "github.com/aws/aws-lambda-go/lambda"
 )
 
-type Response events.APIGatewayProxyResponse
+type Response struct {
+    Message string `json:"message"`
+}
 
-func Handler(ctx context.Context) (Response, error) {
-    var buf bytes.Buffer
+func endpointUrl() string {
+    return os.Getenv("IDOBATA_HOOK_ENDPOINT_URL")
+}
 
-    body, err := json.Marshal(map[string]interface{}{
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-    })
+func postAmesh() error {
+    image, err := amesh.LatestImage()
     if err != nil {
-        return Response{StatusCode: 404}, err
-    }
-    json.HTMLEscape(&buf, body)
-
-    resp := Response{
-        StatusCode:      200,
-        IsBase64Encoded: false,
-        Body:            buf.String(),
-        Headers: map[string]string{
-            "Content-Type":           "application/json",
-            "X-MyCompany-Func-Reply": "hello-handler",
-        },
+        return err
     }
 
-    return resp, nil
+    endpoint := idobata.NewHook(endpointUrl())
+    _, err = endpoint.PostImage(image)
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+
+func Handler() (Response, error) {
+    err := postAmesh()
+
+    return Response{Message: fmt.Sprintf("%v\n", err)}, nil
 }
 
 func main() {

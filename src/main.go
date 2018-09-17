@@ -3,6 +3,8 @@ package main
 import (
     "fmt"
     "os"
+    "bytes"
+    "image/png"
 
     "github.com/mattsan/emattsan-go/amesh"
     "github.com/mattsan/emattsan-go/idobata"
@@ -24,8 +26,14 @@ func postAmesh() error {
         return err
     }
 
+    buffer := new(bytes.Buffer)
+    err = png.Encode(buffer, image)
+    if err != nil {
+        return err
+    }
+
     endpoint := idobata.NewHook(endpointUrl())
-    _, err = endpoint.PostImage(image)
+    _, err = endpoint.PostImage(buffer, "amesh.png")
     if err != nil {
         return err
     }

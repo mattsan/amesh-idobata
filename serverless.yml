@@ -55,6 +55,8 @@ package:
 functions:
   main:
     handler: bin/main
+    events:
+      - schedule: cron(*/5 * * * ? *)
     environment:
       WATCHING_POINT_X: 490
       WATCHING_POINT_Y: 230

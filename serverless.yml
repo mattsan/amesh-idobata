@@ -56,6 +56,12 @@ functions:
   main:
     handler: bin/main
     environment:
+      WATCHING_POINT_X: 490
+      WATCHING_POINT_Y: 230
+      WATCHING_FAR_RADIUS: 80
+      WATCHING_FAR_THRESHOLD: 50
+      WATCHING_NEAR_RADIUS: 40
+      WATCHING_NEAR_THRESHOLD: 25
       IDOBATA_HOOK_ENDPOINT_URL: ${env:IDOBATA_HOOK_ENDPOINT_URL}
 
 #    The following are a few example events you can configure

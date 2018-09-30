@@ -15,7 +15,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:98e63ea7f4630ed61aa4fa45f903a1034e1421f2c851c4cb847e9c2fccae1b3d"
+  digest = "1:09dcac8a4910a4fe96097e591fb9c174930e550c828cc8d6d1eb033d3ceeb4ed"
   name = "github.com/mattsan/emattsan-go"
   packages = [
     "amesh",
@@ -24,7 +24,7 @@
     "idobata",
   ]
   pruneopts = ""
-  revision = "bb95df19ab16b2560702133f20d7733120dabb7a"
+  revision = "e06255b6abe8b3842a1a5c8ee44a5cf86703103e"
 
 [solve-meta]
   analyzer-name = "dep"

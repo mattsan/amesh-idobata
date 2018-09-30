@@ -22,20 +22,14 @@ func endpointUrl() string {
 
 func postAmesh() error {
     image, err := amesh.LatestImage()
-    if err != nil {
-        return err
-    }
+    if err != nil { return err }
 
     buffer := new(bytes.Buffer)
     compositeImage, err := image.Composite()
-    if err != nil {
-        return err
-    }
+    if err != nil { return err }
 
     err = png.Encode(buffer, compositeImage)
-    if err != nil {
-        return err
-    }
+    if err != nil { return err }
 
     timestamp := image.Timestamp
 
@@ -48,9 +42,7 @@ func postAmesh() error {
       &idobata.Source{Value: comment},
       &idobata.Format{Value: "markdown"},
     )
-    if err != nil {
-        return err
-    }
+    if err != nil { return err }
 
     return nil
 }

@@ -21,19 +21,26 @@ func endpointUrl() string {
 }
 
 func postAmesh() error {
-    image, datetime, err := amesh.LatestImage()
+    image, err := amesh.LatestImage()
     if err != nil {
         return err
     }
 
     buffer := new(bytes.Buffer)
-    err = png.Encode(buffer, image)
+    compositeImage, err := image.Composite()
     if err != nil {
         return err
     }
 
+    err = png.Encode(buffer, compositeImage)
+    if err != nil {
+        return err
+    }
+
+    timestamp := image.Timestamp
+
     comment := fmt.Sprintf("%d/%02d/%02d-%02d:%02d の雨雲の状態\nPowered by [Tokyo Amesh](http://tokyo-ame.jwa.or.jp)\n\n---\n",
-      datetime.Year(), datetime.Month(), datetime.Day(), datetime.Hour(), datetime.Minute())
+      timestamp.Year(), timestamp.Month(), timestamp.Day(), timestamp.Hour(), timestamp.Minute())
 
     endpoint := idobata.NewHook(endpointUrl())
     _, err = endpoint.Post(

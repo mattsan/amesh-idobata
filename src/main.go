@@ -4,6 +4,7 @@ import (
     "fmt"
     "os"
     "bytes"
+    "image"
     "image/png"
 
     "github.com/mattsan/emattsan-go/amesh"
@@ -14,6 +15,25 @@ import (
 
 type Response struct {
     Message string `json:"message"`
+}
+
+const farRadius = 80
+const nearRadius = 40
+const commentFormat = `
+%d/%02d/%02d %02d:%02d の雨雲の状態 Powered by [Tokyo Amesh](http://tokyo-ame.jwa.or.jp)
+
+- 降雨範囲の割合
+    - 近辺: %2d %%
+    - 周辺: %2d %%
+
+---
+`
+
+func officePoint() image.Point {
+    return image.Point{
+        X: 490,
+        Y: 230,
+    }
 }
 
 func endpointUrl() string {
@@ -33,8 +53,20 @@ func postAmesh() error {
 
     timestamp := image.Timestamp
 
-    comment := fmt.Sprintf("%d/%02d/%02d-%02d:%02d の雨雲の状態\nPowered by [Tokyo Amesh](http://tokyo-ame.jwa.or.jp)\n\n---\n",
-      timestamp.Year(), timestamp.Month(), timestamp.Day(), timestamp.Hour(), timestamp.Minute())
+    nearRainingRatio := image.RainingRatio(officePoint(), nearRadius)
+    farRainingRatio := image.RainingRatio(officePoint(), farRadius)
+
+    comment :=
+      fmt.Sprintf(
+        commentFormat,
+        timestamp.Year(),
+        timestamp.Month(),
+        timestamp.Day(),
+        timestamp.Hour(),
+        timestamp.Minute(),
+        nearRainingRatio,
+        farRainingRatio,
+      )
 
     endpoint := idobata.NewHook(endpointUrl())
     _, err = endpoint.Post(

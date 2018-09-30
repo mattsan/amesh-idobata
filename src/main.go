@@ -37,7 +37,7 @@ func getEnvAsInt(name string, defaultValue int) int {
     env := os.Getenv(name)
     if env == "" { return defaultValue }
 
-    value, err := strconv.ParseInt(env, 10, 64)
+    value, err := strconv.ParseInt(env, 10, strconv.IntSize)
     if err != nil { return defaultValue }
 
     return int(value)
